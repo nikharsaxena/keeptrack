@@ -3,10 +3,6 @@ import { Project } from "./Project";
 const baseUrl = 'http://localhost:4000';
 const url = `${baseUrl}/projects`;
 
-function delay(ms: number){
-    return (x: any): Promise<any> => new Promise((resolve) => setTimeout(() => resolve(x), ms));
-}
-
 function checkStatus(response: any) {
     if (response.ok) {
         return response;
@@ -56,6 +52,24 @@ const projectAPI = {
                 );
             });
     },
+
+    put(project: Project) {
+        return fetch(`${url}/${project.id}`, {
+            method: 'PUT',
+            body: JSON.stringify(project),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(checkStatus)
+        .then(parseJson)
+        .catch((error: TypeError) => {
+            console.log(`log client error ${error}`);
+            throw new Error(
+                'There was an error updating the project. Please try again'
+            )
+        })
+    }
 };
 
 export { projectAPI };
