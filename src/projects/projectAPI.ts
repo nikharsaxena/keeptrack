@@ -39,6 +39,10 @@ function convertToProjectModels(data: any[]): Project[] {
     return projects;
 }
 
+function convertToProjectModel(data: any): Project {
+    return new Project(data);
+}
+
 const projectAPI = {
     get(page = 1, limit = 20) {
         return fetch(`${url}?_page=${page}&_limit=${limit}&_sort=name`)
@@ -69,6 +73,13 @@ const projectAPI = {
                 'There was an error updating the project. Please try again'
             )
         })
+    },
+
+    find(id: number) {
+        return fetch(`${url}/${id}`)
+            .then(checkStatus)
+            .then(parseJson)
+            .then(convertToProjectModel);
     }
 };
 
